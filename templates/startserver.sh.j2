@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cd {{ working_dir }}/ && java -Xms{{ server_ram_min }} -Xmx{{ server_ram_max }} {{ additional_server_args }} -jar {{ working_dir }}/server.jar nogui

@@ -1,0 +1,24 @@
+---
+hc_host: "localhost"
+working_dir: "/app/.minecraft"
+instance_name: "mcserver"
+instance_description: "Just another MC server"
+server_type: ""
+server_version: ""
+minecraft_version: ""
+modpack_id: ""
+server_file_id: ""
+server_properties: ""
+world_name: "Your Minecraft World"
+world_seed: ""
+world_generation_type: "DEFAULT"
+max_players: 20
+rcon_port: 25575
+rcon_pw: ""
+server_port: 25565
+server_ip: 0.0.0.0
+# Useful for MC 1.12 and Java 8
+# -XX:+UseG1GC -Dsun.rmi.dgc.server.gcInterval=2147483646 -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=51 -XX:G1HeapRegionSize=32M
+additional_server_args: "-Xmn256M"
+server_ram_min: "256m"
+server_ram_max: "1024m"

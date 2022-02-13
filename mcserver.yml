@@ -1,0 +1,62 @@
+#!/usr/bin/env ansible-playbook
+--- 
+- hosts: "minecraft"
+  remote_user: root
+  vars:
+    working_dir: "/app/.minecraft"
+    instance_name: "mcserver"
+    instance_description: "Just another MC server"
+    server_properties_template: ""
+    server_type: ""
+    server_version: ""
+    minecraft_version: ""
+    modpack_id: ""
+    server_file_id: ""
+    world_name: "Your Minecraft World"
+    world_seed: ""
+    world_generation_type: "DEFAULT"
+    max_players: 20
+    rcon_port: 25575
+    rcon_pw: ""
+    server_port: 25565
+    server_ip: 0.0.0.0
+    additional_server_args: ""
+    server_ram_min: "256m"
+    server_ram_max: "1024m"
+  pre_tasks:
+    - import_tasks: ./tasks/pre_check.yml
+  tasks:
+    - name: Download Server Type {{ server_type }}
+      args:
+        chdir: "{{ working_dir }}"
+      shell: "msdcli server -mcversion {{ minecraft_version }} -type {{ server_type }} -serverVersion {{ server_version }}"
+    - name: Download modpack for {{ server_type }} {{ server_version }}
+      args:
+        chdir: "{{ working_dir }}"
+      shell: "msdcli modpack -packageId {{ modpack_id }} -serverPackageFileID {{ server_file_id }}"
+    - name: "Move service template"
+      ansible.builtin.template:
+        src: ./templates/minecraft.service.j2
+        dest: /etc/systemd/system/mc-{{ instance_name }}.service
+        owner: root
+        group: root
+        mode: u=rwx,g=rx,o=rx
+    - name: "Move server start template"
+      ansible.builtin.template:
+        src: ./templates/startserver.sh.j2
+        dest: "{{ working_dir }}/startserver.sh"
+        owner: minecraft 
+        group: minecraft
+        mode: u=rwx,g=rx,o=rx
+      when: server_type != "atm6"
+    - name: "Move server properties"
+      ansible.builtin.template:
+        src: "{{ server_properties_template }}"
+        dest: "{{ working_dir }}/server.properties"
+        owner: minecraft 
+        group: minecraft
+        mode: u=rwx,g=rw,o=rw
+    - name: "Start service"
+      shell: "systemctl daemon-reload; systemctl start mc-{{ instance_name }}.service; systemctl enable mc-{{ instance_name }}.service"
+    - name: "Ensure correct folder owner is set"
+      shell: "chown -R {{ working_dir }}\"

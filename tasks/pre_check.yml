@@ -1,0 +1,29 @@
+- name: Check if folder is empty
+  find:
+    paths: '{{ working_dir }}/'
+  register: filesFound
+- fail:
+    msg: "Working dir ist not empty. Can't setup server"
+  when: filesFound.matched > 0
+- name: Check if msdcli is installed
+  shell: command -v msdcli
+  register: msdclicheck
+- fail: msg="Missing application. Please install msdcli. (https://github.com/lyssar/msdcli)"
+  when: msdclicheck.stdout.find('msdcli') == -1
+- name: Check if awk is installed
+  shell: command -v awk
+  register: awkinstalled
+- fail: msg="Missing application. Please install awk."
+  when: awkinstalled.stdout.find('awk') == -1
+- fail: msg="Missing server_type. Please provide one of atm6|forge|fabric|spigot|papermc"
+  when: server_type|length == 0
+- fail: msg="Missing server_version. Please provide the appropriate version for {{ server_type }}"
+  when: server_version|length == 0
+- fail: msg="Missing minecraft_version. Please provide a minecraft server version"
+  when: minecraft_version|length == 0
+- fail: msg="Missing modpack_id. Please provide a valid modpack id from curseforge"
+  when: modpack_id|length == 0
+- fail: msg="Missing server_file_id. Please provide a valid server file id from curseforge"
+  when: server_file_id|length == 0
+- fail: msg="Missing server_properties_template. Please provide a valid j2 template for server.properties"
+  when: server_properties_template|length == 0

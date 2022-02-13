@@ -1,0 +1,6 @@
+---
+minecraft:
+  hosts:
+    hetznercloud:
+      ansible_ssh_host: "{{ hc_host }}"
+      anyvariable: value
