@@ -56,7 +56,7 @@
         owner: minecraft 
         group: minecraft
         mode: u=rwx,g=rw,o=rw
+    - name: "Ensure correct folder owner is set"
+      shell: "chown -R minecraft:minecraft {{ working_dir }}"
     - name: "Start service"
       shell: "systemctl daemon-reload; systemctl start mc-{{ instance_name }}.service; systemctl enable mc-{{ instance_name }}.service"
-    - name: "Ensure correct folder owner is set"
-      shell: "chown -R {{ working_dir }}"
