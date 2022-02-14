@@ -59,4 +59,4 @@
     - name: "Start service"
       shell: "systemctl daemon-reload; systemctl start mc-{{ instance_name }}.service; systemctl enable mc-{{ instance_name }}.service"
     - name: "Ensure correct folder owner is set"
-      shell: "chown -R {{ working_dir }}\"
+      shell: "chown -R {{ working_dir }}"
